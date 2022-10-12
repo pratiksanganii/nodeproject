@@ -1,10 +1,11 @@
 const { MongoClient } = require('mongodb')
-const connectionString = 'mongodb+srv://todoAppUser:pratiksanganii@cluster0.pdpsj.mongodb.net/?retryWrites=true&w=majority'
+const dotenv = require("dotenv")
+dotenv.config()
 
-const client = new MongoClient(connectionString)
+const client = new MongoClient(process.env.CONNECTION_STRING)
 
 const db = client.db("NodePlayground")
 
 module.exports = db
 const app = require("./app")
-app.listen(3000)
+app.listen(process.env.PORT)
