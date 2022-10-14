@@ -13,3 +13,8 @@ exports.register = function(req,res){
         res.send("Success")
     }
 }
+
+exports.login = function(req,res){
+    let user = new User(req.body)
+    user.login(function(r){res.send(r)})
+}

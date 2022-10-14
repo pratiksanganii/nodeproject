@@ -42,4 +42,18 @@ User.prototype.register = function(){
     }
 }
 
+User.prototype.login = function(callback){
+    this.cleanUp()
+    usersCollection.findOne({username: this.data.username}).then((reqdUser)=>{
+        if(reqdUser && reqdUser.password==this.data.password){
+            callback("Logged In")
+        }else{
+            console.log("Invalid username/password.");
+            callback("Invalid username/password.")
+        }
+    }).catch((err)=>{
+        console.log(err)
+    })
+}
+
 module.exports = User
