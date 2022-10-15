@@ -16,5 +16,5 @@ exports.register = function(req,res){
 
 exports.login = function(req,res){
     let user = new User(req.body)
-    user.login(function(r){res.send(r)})
+    user.login().then(data=>res.send(data)).catch(err=>res.send(err))
 }
