@@ -4,8 +4,6 @@ dotenv.config()
 
 const client = new MongoClient(process.env.CONNECTION_STRING)
 
-const db = client.db("NodePlayground")
-
-module.exports = db
+module.exports = client
 const app = require("./app")
 app.listen(process.env.PORT)

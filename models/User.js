@@ -1,6 +1,6 @@
 const validator = require('validator')
 const bcrypt = require("bcryptjs")
-const usersCollection = require("../db").collection("users")
+const usersCollection = require("../db").db("NodePlayground").collection("users")
 
 let User = function(data){
     this.data = data
