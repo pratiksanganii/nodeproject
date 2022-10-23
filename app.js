@@ -5,6 +5,7 @@ dotenv.config()
 const router = require('./router')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
+const flash = require('connect-flash')
 
 
 const app = express()
@@ -17,6 +18,7 @@ const sessionOptions = session({
 })
 
 app.use(sessionOptions)
+app.use(flash())
 
 app.use(express.static('public'))
 app.set('views', 'views')
