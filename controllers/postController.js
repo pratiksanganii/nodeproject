@@ -88,3 +88,9 @@ exports.viewEditScreen = async function (req, res) {
     res.render("404");
   }
 };
+
+exports.search = async (req, res) => {
+  Post.search(req.body.searchTerm)
+    .then((posts) => res.json(posts))
+    .catch((err) => res.json(err));
+};
