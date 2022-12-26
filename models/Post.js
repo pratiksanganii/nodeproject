@@ -5,7 +5,7 @@ const sanitizeHTML = require("sanitize-html");
 const postsCollection = require("../db")
   .db("NodePlayground")
   .collection("posts");
-
+const followsCollection = require("../db").db("NodePlayground").collection("follows")
 const Post = function (data, userId, requestedPostId) {
   this.data = data;
   this.errors = [];
@@ -198,5 +198,26 @@ Post.search = (searchTerm) => {
     }
   });
 };
+
+Post.countPostsByAuthor = function(id){
+  return new Promise(async(resolve,reject)=>{
+    let postCount = postsCollection.countDocuments({author:id})
+    resolve(postCount)
+  })
+}
+
+Post.getFeed = async function(id){
+    // create an array of the user ids that the current user follows
+    let followedUser = await followsCollection.find({authorId:new ObjectId(id)}).toArray()
+    followedUser = followedUser.map((followDoc)=>{
+      return followDoc.followedId
+    })
+
+    // look for posts where the author is in the above array of followed user
+    return Post.reusablePostQuery([
+      {$match:{author:{$in: followedUser}}},
+      {$sort: {createdDate:-1}}
+    ])
+}
 
 module.exports = Post;
