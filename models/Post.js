@@ -190,6 +190,7 @@ Post.search = (searchTerm) => {
     if (typeof searchTerm == "string") {
       let posts = await Post.reusablePostQuery([
         { $match: { $text: { $search: searchTerm } } },
+        {$sort: {textScore:-1}
         // { $sort: { score: { $meta: "textScore" } } },
       ]);
       resolve(posts);
