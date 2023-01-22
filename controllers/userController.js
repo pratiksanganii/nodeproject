@@ -36,8 +36,8 @@ exports.sharedProfileData = async function (req, res, next) {
 exports.home = async function (req, res) {
   if (req.session.user) {
     // fetch feed of post for current user
-    let posts = await Post.getFeed(req.session.user._id)
-    res.render("home-dashboard",{posts:posts});
+    let posts = await Post.getFeed(req.session.user._id);
+    res.render("home-dashboard", { posts: posts });
   } else {
     res.render("home-guest", {
       regErrors: req.flash("regErrors"),
@@ -180,3 +180,18 @@ exports.mustBeLoggedIn = function (req, res, next) {
     });
   }
 };
+
+exports.doesUsernameExist = function (req, res) {
+  User.findByUsername(req.body.username)
+    .then(function () {
+      res.json(true);
+    })
+    .catch(function () {
+      res.json(false);
+    });
+};
+
+exports.doesEmailExist = async function(req,res){
+  let emailBool = await User.doesEmailExist(req.body.email)
+  res.json(emailBool)
+}
