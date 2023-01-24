@@ -18,6 +18,18 @@ exports.create = function (req, res) {
     });
 };
 
+exports.apiCreate = function (req, res) {
+  let post = new Post(req.body, req.apiUser._id);
+  post
+    .create()
+    .then(function (id) {
+      res.json("congrats.");
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+};
+
 exports.edit = async function (req, res) {
   let post = new Post(req.body, req.visitorId, req.params.id);
   post
@@ -64,10 +76,20 @@ exports.delete = async (req, res) => {
     });
 };
 
+exports.apiDelete = async (req, res) => {
+  Post.delete(req.params.id, req.apiUser._id)
+    .then(() => {
+      res.json("Successfully deleted.")
+    })
+    .catch(() => {
+      res.json("You do not have permission to perform that action.")
+    });
+};
+
 exports.viewSingle = async function (req, res) {
   try {
     let post = await Post.findSingleById(req.params.id, req.visitorId);
-    res.render("single-post-screen", { post: post,title:post.title });
+    res.render("single-post-screen", { post: post, title: post.title });
   } catch {
     res.render("404");
   }

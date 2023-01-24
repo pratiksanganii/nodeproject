@@ -3,6 +3,9 @@ const Post = require("../models/Post");
 const User = require("../models/User");
 const Follow = require("../models/Follow");
 
+const jwt = require("jsonwebtoken");
+const { findByAuthorId } = require("../models/Post");
+
 exports.sharedProfileData = async function (req, res, next) {
   let isFollowing = false;
   let isVisitorsProfile = false;
@@ -90,6 +93,30 @@ exports.login = function (req, res) {
         res.redirect("/");
       });
     });
+};
+exports.apiLogin = function (req, res) {
+  let user = new User(req.body);
+  user
+    .login()
+    .then((result) => {
+      res.json(
+        jwt.sign({ _id: user.data._id }, process.env.JWTSECRET, {
+          expiresIn: "3d",
+        })
+      );
+    })
+    .catch((err) => {
+      res.json("error");
+    });
+};
+
+exports.apiMustBeLoggedIn = function (req, res, next) {
+  try {
+    req.apiUser = jwt.verify(req.body.token, process.env.JWTSECRET);
+    next();
+  } catch {
+    res.json("Wrong credentials.");
+  }
 };
 
 exports.logout = function (req, res) {
@@ -191,7 +218,17 @@ exports.doesUsernameExist = function (req, res) {
     });
 };
 
-exports.doesEmailExist = async function(req,res){
-  let emailBool = await User.doesEmailExist(req.body.email)
-  res.json(emailBool)
-}
+exports.doesEmailExist = async function (req, res) {
+  let emailBool = await User.doesEmailExist(req.body.email);
+  res.json(emailBool);
+};
+
+exports.apiGetPostsByAuthor = async function (req, res) {
+  try {
+    let authorDoc = await User.findByUsername(req.params.username);
+    let posts = await findByAuthorId(authorDoc._id);
+    res.json(posts);
+  } catch {
+    res.json("Invalid username requested.");
+  }
+};
