@@ -2,8 +2,8 @@ const User = require('./User')
 
 const ObjectId = require('mongodb').ObjectId
 
-const usersCollection = require('../db').db().collection("users")
-const followsCollection = require('../db').db().collection("follows")
+const usersCollection = require('../db').db('NodePlayground').collection("users")
+const followsCollection = require('../db').db('NodePlayground').collection("follows")
 
 let Follow = function(followedUsername, authorId){
     this.followedUsername = followedUsername
