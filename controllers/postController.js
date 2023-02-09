@@ -41,7 +41,7 @@ exports.edit = async function (req, res) {
         // post was updated in db
         req.flash("success", "Post successfully updated.");
         req.session.save(() => {
-          res.redirect(`/post/${req.params.id}/edit`);
+          res.redirect(`/post/${req.params.id}`);
         });
       } else {
         post.errors.forEach((err) => {
@@ -79,10 +79,10 @@ exports.delete = async (req, res) => {
 exports.apiDelete = async (req, res) => {
   Post.delete(req.params.id, req.apiUser._id)
     .then(() => {
-      res.json("Successfully deleted.")
+      res.json("Successfully deleted.");
     })
     .catch(() => {
-      res.json("You do not have permission to perform that action.")
+      res.json("You do not have permission to perform that action.");
     });
 };
 
@@ -97,8 +97,8 @@ exports.viewSingle = async function (req, res) {
 
 exports.viewEditScreen = async function (req, res) {
   try {
-    let post = await Post.findSingleById(req.params.id);
-    if (post.authorId == req.visitorId) {
+    let post = await Post.findSingleById(req.params.id, req.visitorId);
+    if (post.isVisitorOwner) {
       res.render("edit-post", { post: post });
     } else {
       req.flash("errors", "You do not have permission to perform that action.");
