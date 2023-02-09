@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const validator = require('validator')
-const usersCollection = require('../db').db().collection('users')
+const usersCollection = require('../db').db('NodePlayground').collection('users')
 const md5 = require('md5')
 
 let User = function(data, getAvatar){
